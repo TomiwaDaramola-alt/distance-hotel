@@ -496,8 +496,16 @@ def validate_email_simple(email):
 # ADMIN DASHBOARD
 # ============================================
 
+# ============================================
+# ADMIN DASHBOARD (SECURED)
+# ============================================
+
 @app.route('/admin')
 def admin():
+    # CHECK: Is the user logged in?
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -529,6 +537,7 @@ def admin():
         paid_bookings=paid_bookings,
         pending_bookings=pending_bookings
     )
+
 # ============================================
 # ADMIN API ACTIONS
 # ============================================
@@ -611,6 +620,28 @@ def health_check():
         'service': 'Distance Hotel API',
         'version': '3.0.0'
     })
+    
+    
+    @app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = request.form.get('username')
+        pwd = request.form.get('password')
+        
+        # Security: Replace with your chosen username and password
+        if user == 'admin' and pwd == 'Distance2026':
+            session['logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return "Invalid login details", 401
+            
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 
 # ============================================
 # RUN SERVER
