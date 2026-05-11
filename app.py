@@ -629,7 +629,8 @@ def health_check():
     })
     
     
-    @app.route('/login', methods=['GET', 'POST'])
+   @app.route('/login', methods=['GET', 'POST'])
+   # <--- Is this exactly '/login'?
 def login():
     if request.method == 'POST':
         user = request.form.get('username')
