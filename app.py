@@ -509,91 +509,25 @@ def validate_email_simple(email):
 
 @app.route('/admin')
 def admin():
-    # CHECK: Is the user logged in?
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
+    
     cursor.execute("SELECT * FROM bookings ORDER BY id DESC")
     bookings = cursor.fetchall()
-
+    
     cursor.execute("SELECT * FROM subscribers ORDER BY id DESC")
     subscribers = cursor.fetchall()
 
-    # Revenue calculation
-    total_revenue = sum(
-        b['total_amount'] or 0 for b in bookings
-        if b['payment_status'] == 'paid'
-    )
-
-    # Stats
+    total_revenue = sum(b['total_amount'] or 0 for b in bookings if b['payment_status'] == 'paid')
     total_bookings = len(bookings)
     paid_bookings = sum(1 for b in bookings if b['payment_status'] == 'paid')
     pending_bookings = sum(1 for b in bookings if b['payment_status'] == 'pending')
 
     conn.close()
-
-    return render_template(
-        'admin.html',
-        bookings=bookings,
-        subscribers=subscribers,
-        total_revenue=total_revenue,
-        total_bookings=total_bookings,
-        paid_bookings=paid_bookings,
-        pending_bookings=pending_bookings
-    )
-
-# ============================================
-# ADMIN API ACTIONS
-# ============================================
-
-@app.route('/api/admin/confirm/<int:booking_id>', methods=['POST'])
-def confirm_booking(booking_id):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("UPDATE bookings SET payment_status = 'paid' WHERE id = ?", (booking_id,))
-        conn.commit()
-        conn.close()
-        return jsonify({'success': True, 'message': 'Booking confirmed'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/admin/delete/<int:booking_id>', methods=['DELETE'])
-def delete_booking(booking_id):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM bookings WHERE id = ?', (booking_id,))
-        conn.commit()
-        conn.close()
-        return jsonify({'success': True, 'message': 'Booking deleted'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-# ============================================
-# ERROR HANDLERS & HEALTH
-# ============================================
-
-@app.errorhandler(404)
-def not_found(e):
-    if request.path.startswith('/api/'):
-        return jsonify({'success': False, 'error': 'Route not found'}), 404
-    return render_template('404.html'), 404
-
-@app.errorhandler(500)
-def server_error(e):
-    return render_template('500.html'), 500
-
-@app.route('/health')
-def health_check():
-    return jsonify({'status': 'ok', 'service': 'Distance Hotel API'})
-
-# ============================================
-# LOGIN & LOGOUT (FIXED INDENTATION)
-# ============================================
+    return render_template('admin.html', bookings=bookings, subscribers=subscribers, total_revenue=total_revenue, total_bookings=total_bookings, paid_bookings=paid_bookings, pending_bookings=pending_bookings)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
