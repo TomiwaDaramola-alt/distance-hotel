@@ -5,6 +5,8 @@ import re
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from dotenv import load_dotenv
+from hotel_brain import HOTEL_KNOWLEDGE
+
 
 # Load environment variables
 load_dotenv()
@@ -284,3 +286,21 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+@app.route('/api/ai-chat', methods=['POST'])
+def ai_chat():
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '').lower()
+        
+        # Default response if AI doesn't know the answer
+        response = "I'm not quite sure about that. Please contact our reception or check our room details for more info."
+        
+        # Look through the separate brain file
+        for key, value in HOTEL_KNOWLEDGE.items():
+            if key in user_message:
+                response = value
+                break
+                
+        return jsonify({'reply': response})
+    except Exception as e:
+        return jsonify({'reply': "My brain is a bit foggy right now. Try again?"}), 500

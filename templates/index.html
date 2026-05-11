@@ -1340,7 +1340,523 @@
             
             console.log('✅ Distance Hotel: Fallback initialization complete');
         });
-    </script>
+  
+  </script>
+<div id="ai-chat-container" style="position:fixed; bottom:20px; right:20px; z-index:1000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    
+    <div id="chat-window" style="display:none; width:320px; height:450px; background:white; border-radius:15px; flex-direction:column; box-shadow: 0px 10px 30px rgba(0,0,0,0.2); overflow: hidden; border: 1px solid #eee;">
+        
+        <div style="background:#1a1a1a; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🤖 Distance AI Assistant</span>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer; font-size:20px;">&times;</button>
+        </div>
 
-</body>
-</html>
+        <div id="chat-messages" style="flex:1; padding:15px; overflow-y:auto; background:#f8f9fa; display:flex; flex-direction:column; gap:10px;">
+            <div style="background:#e9ecef; padding:10px; border-radius:10px; align-self:flex-start; max-width:80%; color: #333;">
+                Hello! I'm the Distance Hotel AI. Ask me about our rooms, prices, or check-in times!
+            </div>
+        </div>
+
+        <div style="padding:15px; background:white; border-top:1px solid #eee;">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; border:1px solid #ddd; padding:10px; border-radius:20px; outline:none; font-size:14px;">
+                <button onclick="sendMessage()" style="background:#1a1a1a; color:white; border:none; width:35px; height:35px; border-radius:50%; cursor:pointer;">➔</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="chat-toggle-btn" onclick="toggleChat()" style="background:#1a1a1a; color:white; border:none; padding:15px 25px; border-radius:50px; cursor:pointer; font-weight:bold; box-shadow: 0px 5px 15px rgba(0,0,0,0.3); transition: 0.3s;">
+        Ask AI
+    </button>
+</div>
+
+<!-- AI Chat Widget -->
+<div id="ai-chat-container">
+    
+    <div id="chat-window" style="display:none;">
+        
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <span class="chat-avatar">🤖</span>
+                <div>
+                    <span class="chat-title">Distance AI Assistant</span>
+                    <span class="chat-status">● Online</span>
+                </div>
+            </div>
+            <button class="chat-close-btn" onclick="toggleChat()" aria-label="Close chat">×</button>
+        </div>
+
+        <div id="chat-messages">
+            <div class="msg-ai">
+                <div class="msg-bubble">Hello! I'm the Distance Hotel AI. Ask me about our rooms, prices, dining, or anything about your stay! 🏨</div>
+                <div class="msg-time">Just now</div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div id="typing-indicator" style="display:none;">
+                <span class="typing-dots"><span></span><span></span><span></span></span>
+                <span>AI is typing...</span>
+            </div>
+            <div class="chat-input-wrap">
+                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" maxlength="500">
+                <button id="chat-send-btn" onclick="sendMessage()" aria-label="Send message">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button id="chat-toggle-btn" onclick="toggleChat()">
+        <span class="toggle-icon">💬</span>
+        <span>Ask AI</span>
+    </button>
+</div>
+
+<style>
+#ai-chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+#chat-window {
+    width: 360px;
+    height: 500px;
+    background: #ffffff;
+    border-radius: 16px;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow: hidden;
+    border: none;
+    animation: chatSlideIn 0.3s ease-out;
+}
+
+@keyframes chatSlideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chat-header {
+    background: #1a1a2e;
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-avatar {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+}
+
+.chat-title {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.chat-status {
+    display: block;
+    font-size: 12px;
+    color: #4ade80;
+    margin-top: 2px;
+}
+
+.chat-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.chat-close-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+
+.msg-user, .msg-ai {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    animation: msgAppear 0.2s ease-out;
+}
+
+@keyframes msgAppear {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-user {
+    align-self: flex-end;
+}
+
+.msg-ai {
+    align-self: flex-start;
+}
+
+.msg-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.msg-user .msg-bubble {
+    background: #1a1a2e;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.msg-ai .msg-bubble {
+    background: white;
+    color: #333;
+    border: 1px solid #e5e7eb;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.msg-time {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+
+.msg-user .msg-time {
+    text-align: right;
+}
+
+.msg-error {
+    align-self: center;
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-input-area {
+    padding: 12px 16px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+}
+
+#typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 0 10px 4px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    background: #9ca3af;
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.chat-input-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#chat-input {
+    flex: 1;
+    border: 1px solid #d1d5db;
+    padding: 12px 16px;
+    border-radius: 24px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#chat-input:focus {
+    border-color: #1a1a2e;
+    box-shadow: 0 0 0 3px rgba(26,26,46,0.1);
+}
+
+#chat-send-btn {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+#chat-send-btn:hover {
+    background: #2d2d4a;
+    transform: scale(1.05);
+}
+
+#chat-send-btn:active {
+    transform: scale(0.95);
+}
+
+#chat-send-btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#chat-toggle-btn {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 20px rgba(26,26,46,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#chat-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(26,26,46,0.4);
+}
+
+.toggle-icon {
+    font-size: 18px;
+}
+
+/* Scrollbar styling */
+#chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    #chat-window {
+        width: calc(100vw - 40px);
+        height: 70vh;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+    }
+}
+</style>
+
+<script>
+(function() {
+    'use strict';
+    
+    // DOM Elements
+    const chatWindow = document.getElementById('chat-window');
+    const chatToggleBtn = document.getElementById('chat-toggle-btn');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const sendBtn = document.getElementById('chat-send-btn');
+    
+    // State
+    let isOpen = false;
+    let isTyping = false;
+    
+    // Initialize
+    function init() {
+        // Bind Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Escape to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen) {
+                toggleChat();
+            }
+        });
+        
+        // Auto-focus when opening
+        chatInput.addEventListener('focus', function() {
+            this.setAttribute('placeholder', '');
+        });
+        chatInput.addEventListener('blur', function() {
+            this.setAttribute('placeholder', 'Type a message...');
+        });
+    }
+    
+    // Toggle chat window
+    window.toggleChat = function() {
+        isOpen = !isOpen;
+        chatWindow.style.display = isOpen ? 'flex' : 'none';
+        chatToggleBtn.style.display = isOpen ? 'none' : 'flex';
+        
+        if (isOpen) {
+            setTimeout(() => chatInput.focus(), 100);
+        }
+    };
+    
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Format time
+    function getTime() {
+        const now = new Date();
+        return now.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+    }
+    
+    // Add message to chat
+    function addMessage(text, isUser, isError = false) {
+        const msgDiv = document.createElement('div');
+        
+        if (isError) {
+            msgDiv.className = 'msg-error';
+            msgDiv.innerHTML = `<span>⚠️</span> ${escapeHtml(text)}`;
+        } else {
+            msgDiv.className = isUser ? 'msg-user' : 'msg-ai';
+            msgDiv.innerHTML = `
+                <div class="msg-bubble">${escapeHtml(text)}</div>
+                <div class="msg-time">${getTime()}</div>
+            `;
+        }
+        
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Show/hide typing indicator
+    function setTyping(show) {
+        isTyping = show;
+        typingIndicator.style.display = show ? 'flex' : 'none';
+        sendBtn.disabled = show;
+        chatInput.disabled = show;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Send message
+    window.sendMessage = function() {
+        const userText = chatInput.value.trim();
+        if (!userText || isTyping) return;
+        
+        // Clear input and add user message
+        chatInput.value = '';
+        addMessage(userText, true);
+        
+        // Show typing indicator
+        setTyping(true);
+        
+        // Send to backend
+        fetch('/api/ai-chat', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ message: userText })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            setTyping(false);
+            if (data.reply) {
+                addMessage(data.reply, false);
+            } else {
+                addMessage("I didn't get a response. Please try again.", false, true);
+            }
+        })
+        .catch(error => {
+            setTyping(false);
+            console.error('Chat error:', error);
+            addMessage("Connection error. Please check your internet and try again.", false, true);
+        });
+    };
+    
+    // Run init when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
