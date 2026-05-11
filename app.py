@@ -630,20 +630,16 @@ def health_check():
     
     
    @app.route('/login', methods=['GET', 'POST'])
-   # <--- Is this exactly '/login'?
 def login():
     if request.method == 'POST':
         user = request.form.get('username')
         pwd = request.form.get('password')
-        
-        # Security: Matches your chosen credentials
         if user == 'admin' and pwd == 'Distance2026':
             session['logged_in'] = True
             return redirect(url_for('admin'))
-        else:
-            return "Invalid login details", 401
-            
+        return "Invalid login details", 401
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
