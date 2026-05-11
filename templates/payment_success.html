@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful — Dignity Hotel</title>
+    <style>
+        body { 
+            font-family: system-ui; 
+            text-align: center; 
+            padding: 40px 20px; 
+            background: #f0fdf4;
+        }
+        .success { 
+            color: #166534; 
+            font-size: 72px; 
+            margin-bottom: 20px;
+        }
+        h1 { color: #8B0000; }
+        .details { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            max-width: 400px; 
+            margin: 30px auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .amount { 
+            font-size: 36px; 
+            font-weight: 900; 
+            color: #8B0000;
+        }
+        .btn {
+            display: inline-block;
+            background: #8B0000;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success">✓</div>
+    <h1>Payment Successful!</h1>
+    <p>Thank you for choosing Dignity Hotel, Oro.</p>
+    
+    <div class="details">
+        <div>Reference: <strong>{{ reference }}</strong></div>
+        <div class="amount">₦{{ "{:,}".format(amount) }}</div>
+        <p>A confirmation has been sent to your email.</p>
+    </div>
+    
+    <a href="/" class="btn">Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed — Dignity Hotel</title>
+    <style>
+        body { 
+            font-family: system-ui; 
+            text-align: center; 
+            padding: 40px 20px; 
+            background: #fef2f2;
+        }
+        .fail { 
+            color: #991b1b; 
+            font-size: 72px; 
+            margin-bottom: 20px;
+        }
+        h1 { color: #8B0000; }
+        .btn {
+            display: inline-block;
+            background: #8B0000;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 10px;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+        }
+    </style>
+</head>
+<body>
+    <div class="fail">✕</div>
+    <h1>Payment Failed</h1>
+    <p>Don't worry — your booking can still be saved.</p>
+    <p>Reference: {{ reference }}</p>
+    
+    <a href="/" class="btn">Try Again</a>
+    <a href="https://wa.me/2348000000000" class="btn btn-whatsapp">Pay via WhatsApp</a>
+</body>
+</html>

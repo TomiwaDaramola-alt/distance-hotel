@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A1628">
+    <meta name="description" content="Distance Hotel - Premium luxury accommodation in Oro, Kwara State, Nigeria">
+    <title>Distance Hotel — Luxury Redefined | Oro, Kwara State</title>
+    
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Paystack -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    
+    <!-- Distance Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body data-whatsapp="2348000000000" data-hotel-name="Distance Hotel" data-paystack-key="{{ paystack_key }}">
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="nav-glass" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-brand" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+                <div class="nav-logo">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <div>
+                    <div class="nav-title">Distance</div>
+                    <div class="nav-subtitle">Luxury Hotel</div>
+                </div>
+            </a>
+            
+            <div class="nav-menu">
+                <a href="#rooms">Rooms</a>
+                <a href="#suites">Suites</a>
+                <a href="#dining">Dining</a>
+                <a href="#amenities">Amenities</a>
+                <a href="#events">Events</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#reviews">Reviews</a>
+                <a href="#location">Location</a>
+            </div>
+            
+            <div class="nav-cta">
+                <button class="nav-cta-btn" onclick="scrollToSection('rooms')">
+                    <i class="fas fa-calendar-check"></i> Book Now
+                </button>
+            </div>
+            
+            <button class="nav-mobile-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                <i class="fas fa-bars" id="menuIcon"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#rooms" onclick="scrollToSection('rooms');toggleMobileMenu()">Rooms</a>
+            <a href="#suites" onclick="scrollToSection('suites');toggleMobileMenu()">Suites</a>
+            <a href="#dining" onclick="scrollToSection('dining');toggleMobileMenu()">Dining</a>
+            <a href="#amenities" onclick="scrollToSection('amenities');toggleMobileMenu()">Amenities</a>
+            <a href="#events" onclick="scrollToSection('events');toggleMobileMenu()">Events</a>
+            <a href="#gallery" onclick="scrollToSection('gallery');toggleMobileMenu()">Gallery</a>
+            <a href="#reviews" onclick="scrollToSection('reviews');toggleMobileMenu()">Reviews</a>
+            <a href="#location" onclick="scrollToSection('location');toggleMobileMenu()">Location</a>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <header class="hero" id="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&h=1080&fit=crop&q=80" 
+                 alt="Distance Hotel Exterior" 
+                 loading="eager">
+        </div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-gem"></i>
+                <span>Oro's Finest Since 2018</span>
+            </div>
+            
+            <h1 class="hero-title">
+                Where <span class="accent">Distance</span><br>
+                Meets <span class="accent">Luxury</span>
+            </h1>
+            
+            <p class="hero-desc">
+                Experience world-class hospitality in the heart of Oro, Kwara State. 
+                Where every detail is crafted for your comfort and every stay becomes unforgettable.
+            </p>
+            
+            <!-- Quick Booking Bar -->
+            <div class="booking-bar">
+                <form class="booking-form" onsubmit="event.preventDefault(); quickSearch();">
+                    <div class="booking-field">
+                        <label for="checkIn">Check In</label>
+                        <input type="date" id="checkIn" required>
+                    </div>
+                    <div class="booking-field">
+                        <label for="checkOut">Check Out</label>
+                        <input type="date" id="checkOut" required>
+                    </div>
+                    <div class="booking-field">
+                        <label for="guests">Guests</label>
+                        <div class="select-wrap">
+                            <select id="guests">
+                                <option value="1">1 Guest</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5+ Guests</option>
+                            </select>
+                            <i class="fas fa-chevron-down chevron"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="booking-submit">
+                        <i class="fas fa-search"></i>
+                        <span>Find Rooms</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <a href="#rooms" onclick="scrollToSection('rooms');return false;">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- ==================== TRUST BAR ==================== -->
+    <section class="trust-bar" id="trustBar">
+        <div class="trust-item">
+            <i class="fas fa-shield-halved"></i>
+            <div>
+                <div class="trust-title">Secure Booking</div>
+                <div class="trust-desc">256-bit SSL encrypted</div>
+            </div>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-rotate-left"></i>
+            <div>
+                <div class="trust-title">Free Cancellation</div>
+                <div class="trust-desc">Up to 24 hours before</div>
+            </div>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-headset"></i>
+            <div>
+                <div class="trust-title">24/7 Support</div>
+                <div class="trust-desc">Always here to help</div>
+            </div>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-tag"></i>
+            <div>
+                <div class="trust-title">Best Price</div>
+                <div class="trust-desc">Guaranteed lowest rates</div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== STATS BAR ==================== -->
+    <section class="stats-bar" id="statsBar">
+        <div class="stat-item">
+            <div class="stat-number" data-target="4.9">0</div>
+            <div class="stat-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-label">Guest Rating</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="80">0</div>
+            <div class="stat-suffix">+</div>
+            <div class="stat-label">Luxury Rooms</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Concierge Service</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="100">0</div>
+            <div class="stat-suffix">%</div>
+            <div class="stat-label">Satisfaction</div>
+        </div>
+    </section>
+
+    <!-- ==================== ROOMS ==================== -->
+    <section class="rooms-section" id="rooms">
+        <div class="section-header">
+            <span class="section-label">Accommodations</span>
+            <h2 class="section-title">Our Rooms</h2>
+            <p class="section-desc">
+                From cozy comfort to modern elegance, discover the perfect room 
+                for your stay in Oro, Kwara State.
+            </p>
+        </div>
+        
+        <div class="room-filters">
+            <button class="filter-btn active" data-filter="all" onclick="filterRooms('all')">All Rooms</button>
+            <button class="filter-btn" data-filter="standard" onclick="filterRooms('standard')">Standard</button>
+            <button class="filter-btn" data-filter="deluxe" onclick="filterRooms('deluxe')">Deluxe</button>
+            <button class="filter-btn" data-filter="executive" onclick="filterRooms('executive')">Executive</button>
+        </div>
+        
+        <div class="rooms-grid">
+            {% for r in data.rooms %}
+            <article class="room-card" data-category="{{ r.category }}">
+                <div class="room-image-wrap">
+                    <img src="{{ r.image }}?w=800&h=600&fit=crop&q=80" 
+                         alt="{{ r.name }}" 
+                         loading="lazy">
+                    <div class="room-price-tag">
+                        <span class="currency">₦{{ r.price }}</span>
+                        <span class="period">/night</span>
+                    </div>
+                    {% if r.tags %}
+                    <div class="room-badge">{{ r.tags[0] }}</div>
+                    {% endif %}
+                    <div class="room-meta-bar">
+                        <span><i class="fas fa-user-friends"></i> {{ r.guests }}</span>
+                        <span><i class="fas fa-bed"></i> {{ r.bed }}</span>
+                        <span><i class="fas fa-ruler-combined"></i> {{ r.size }}</span>
+                    </div>
+                </div>
+                
+                <div class="room-content">
+                    <div class="room-header">
+                        <h3 class="room-name">{{ r.name }}</h3>
+                        <span class="room-status">Available</span>
+                    </div>
+                    
+                    <p class="room-description">
+                        {{ r.description }}
+                    </p>
+                    
+                    <div class="room-tags">
+                        {% for tag in r.tags %}
+                        <span class="room-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="room-footer">
+                        <div class="room-price-display">
+                            <span class="label">Per Night</span>
+                            <span class="amount">₦{{ r.price }}</span>
+                        </div>
+                        <div class="room-actions">
+                            <button class="btn-details" onclick="viewRoomDetails('{{ r.name }}')">
+                                Details
+                            </button>
+                            <button class="btn-book" onclick="openBookingModal('{{ r.name }}', '{{ r.price }}')">
+                                Book
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ==================== SUITES ==================== -->
+    <section class="suites-section" id="suites">
+        <div class="section-header">
+            <span class="section-label">Premium Living</span>
+            <h2 class="section-title">Luxury Suites</h2>
+            <p class="section-desc">
+                Elevate your experience with our exclusive suites designed for 
+                discerning guests who demand the extraordinary.
+            </p>
+        </div>
+        
+        <div class="suites-showcase">
+            <div class="suite-featured">
+                <div class="suite-image">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&h=700&fit=crop&q=80" 
+                         alt="Presidential Suite" 
+                         loading="lazy">
+                    <div class="suite-overlay">
+                        <span class="suite-label">Flagship</span>
+                        <h3 class="suite-name">Presidential Suite</h3>
+                        <p class="suite-desc">280m² of pure luxury with private terrace, jacuzzi, and dedicated butler service</p>
+                        <div class="suite-price">₦45,000<span>/night</span></div>
+                        <button class="btn-suite-book" onclick="openBookingModal('Presidential Suite', '45000')">
+                            <i class="fas fa-calendar-check"></i> Reserve Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="suite-grid">
+                <div class="suite-card">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&h=400&fit=crop&q=80" 
+                         alt="Royal Suite" 
+                         loading="lazy">
+                    <div class="suite-info">
+                        <h4>Royal Suite</h4>
+                        <p>180m² • King Bed • City View</p>
+                        <div class="suite-card-price">₦25,000<span>/night</span></div>
+                        <button onclick="openBookingModal('Royal Suite', '25000')">Book</button>
+                    </div>
+                </div>
+                <div class="suite-card">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&h=400&fit=crop&q=80" 
+                         alt="Honeymoon Suite" 
+                         loading="lazy">
+                    <div class="suite-info">
+                        <h4>Honeymoon Suite</h4>
+                        <p>120m² • King Bed • Ocean View</p>
+                        <div class="suite-card-price">₦18,000<span>/night</span></div>
+                        <button onclick="openBookingModal('Honeymoon Suite', '18000')">Book</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== STATS BAR ==================== -->
+    <section class="stats-bar" id="statsBar">
+        <div class="stat-item">
+            <div class="stat-number" data-target="4.9">0</div>
+            <div class="stat-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-label">Guest Rating</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="80">0</div>
+            <div class="stat-suffix">+</div>
+            <div class="stat-label">Luxury Rooms</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Concierge Service</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="100">0</div>
+            <div class="stat-suffix">%</div>
+            <div class="stat-label">Satisfaction</div>
+        </div>
+    </section>
+
+    <!-- ==================== ROOMS ==================== -->
+    <section class="rooms-section" id="rooms">
+        <div class="section-header">
+            <span class="section-label">Accommodations</span>
+            <h2 class="section-title">Our Rooms</h2>
+            <p class="section-desc">
+                From cozy comfort to modern elegance, discover the perfect room 
+                for your stay in Oro, Kwara State.
+            </p>
+        </div>
+        
+        <div class="room-filters">
+            <button class="filter-btn active" data-filter="all" onclick="filterRooms('all')">All Rooms</button>
+            <button class="filter-btn" data-filter="standard" onclick="filterRooms('standard')">Standard</button>
+            <button class="filter-btn" data-filter="deluxe" onclick="filterRooms('deluxe')">Deluxe</button>
+            <button class="filter-btn" data-filter="executive" onclick="filterRooms('executive')">Executive</button>
+        </div>
+        
+        <div class="rooms-grid">
+            {% for r in data.rooms %}
+            <article class="room-card" data-category="{{ r.category }}">
+                <div class="room-image-wrap">
+                    <img src="{{ r.image }}?w=800&h=600&fit=crop&q=80" 
+                         alt="{{ r.name }}" 
+                         loading="lazy">
+                    <div class="room-price-tag">
+                        <span class="currency">₦{{ r.price }}</span>
+                        <span class="period">/night</span>
+                    </div>
+                    {% if r.tags %}
+                    <div class="room-badge">{{ r.tags[0] }}</div>
+                    {% endif %}
+                    <div class="room-meta-bar">
+                        <span><i class="fas fa-user-friends"></i> {{ r.guests }}</span>
+                        <span><i class="fas fa-bed"></i> {{ r.bed }}</span>
+                        <span><i class="fas fa-ruler-combined"></i> {{ r.size }}</span>
+                    </div>
+                </div>
+                
+                <div class="room-content">
+                    <div class="room-header">
+                        <h3 class="room-name">{{ r.name }}</h3>
+                        <span class="room-status">Available</span>
+                    </div>
+                    
+                    <p class="room-description">
+                        {{ r.description }}
+                    </p>
+                    
+                    <div class="room-tags">
+                        {% for tag in r.tags %}
+                        <span class="room-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="room-footer">
+                        <div class="room-price-display">
+                            <span class="label">Per Night</span>
+                            <span class="amount">₦{{ r.price }}</span>
+                        </div>
+                        <div class="room-actions">
+                            <button class="btn-details" onclick="viewRoomDetails('{{ r.name }}')">
+                                Details
+                            </button>
+                            <button class="btn-book" onclick="openBookingModal('{{ r.name }}', '{{ r.price }}')">
+                                Book
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ==================== SUITES ==================== -->
+    <section class="suites-section" id="suites">
+        <div class="section-header">
+            <span class="section-label">Premium Living</span>
+            <h2 class="section-title">Luxury Suites</h2>
+            <p class="section-desc">
+                Elevate your experience with our exclusive suites designed for 
+                discerning guests who demand the extraordinary.
+            </p>
+        </div>
+        
+        <div class="suites-showcase">
+            <div class="suite-featured">
+                <div class="suite-image">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&h=700&fit=crop&q=80" 
+                         alt="Presidential Suite" 
+                         loading="lazy">
+                    <div class="suite-overlay">
+                        <span class="suite-label">Flagship</span>
+                        <h3 class="suite-name">Presidential Suite</h3>
+                        <p class="suite-desc">280m² of pure luxury with private terrace, jacuzzi, and dedicated butler service</p>
+                        <div class="suite-price">₦45,000<span>/night</span></div>
+                        <button class="btn-suite-book" onclick="openBookingModal('Presidential Suite', '45000')">
+                            <i class="fas fa-calendar-check"></i> Reserve Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="suite-grid">
+                <div class="suite-card">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&h=400&fit=crop&q=80" 
+                         alt="Royal Suite" 
+                         loading="lazy">
+                    <div class="suite-info">
+                        <h4>Royal Suite</h4>
+                        <p>180m² • King Bed • City View</p>
+                        <div class="suite-card-price">₦25,000<span>/night</span></div>
+                        <button onclick="openBookingModal('Royal Suite', '25000')">Book</button>
+                    </div>
+                </div>
+                <div class="suite-card">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&h=400&fit=crop&q=80" 
+                         alt="Honeymoon Suite" 
+                         loading="lazy">
+                    <div class="suite-info">
+                        <h4>Honeymoon Suite</h4>
+                        <p>120m² • King Bed • Ocean View</p>
+                        <div class="suite-card-price">₦18,000<span>/night</span></div>
+                        <button onclick="openBookingModal('Honeymoon Suite', '18000')">Book</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== DINING ==================== -->
+    <section class="dining-section" id="dining">
+        <div class="section-header">
+            <span class="section-label">Culinary Excellence</span>
+            <h2 class="section-title">Dining Experience</h2>
+            <p class="section-desc">
+                Savor exquisite flavors crafted by world-class chefs. From local Nigerian delicacies 
+                to international gourmet cuisine, every meal is a journey.
+            </p>
+        </div>
+        
+        <div class="dining-grid">
+            <div class="dining-card featured">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&q=80" 
+                     alt="The Azure Restaurant" 
+                     loading="lazy">
+                <div class="dining-content">
+                    <span class="dining-type">Fine Dining</span>
+                    <h3>The Azure</h3>
+                    <p>Our signature restaurant offering a fusion of continental and Nigerian cuisine. 
+                       Open for breakfast, lunch, and dinner with live piano evenings.</p>
+                    <div class="dining-meta">
+                        <span><i class="fas fa-clock"></i> 6:30 AM - 11:00 PM</span>
+                        <span><i class="fas fa-utensils"></i> A La Carte</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dining-card">
+                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=400&fit=crop&q=80" 
+                     alt="Sky Lounge Bar" 
+                     loading="lazy">
+                <div class="dining-content">
+                    <span class="dining-type">Rooftop Bar</span>
+                    <h3>Sky Lounge</h3>
+                    <p>Cocktails and panoramic views of Oro. Perfect for sunset drinks and intimate conversations.</p>
+                    <div class="dining-meta">
+                        <span><i class="fas fa-clock"></i> 4:00 PM - 2:00 AM</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dining-card">
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop&q=80" 
+                     alt="Poolside Grill" 
+                     loading="lazy">
+                <div class="dining-content">
+                    <span class="dining-type">Casual Dining</span>
+                    <h3>Poolside Grill</h3>
+                    <p>Fresh grills, light bites, and refreshing beverages served by our Olympic-size pool.</p>
+                    <div class="dining-meta">
+                        <span><i class="fas fa-clock"></i> 10:00 AM - 8:00 PM</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dining-card">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop&q=80" 
+                     alt="Cafe Distance" 
+                     loading="lazy">
+                <div class="dining-content">
+                    <span class="dining-type">Coffee & Pastries</span>
+                    <h3>Cafe Distance</h3>
+                    <p>Artisan coffee, fresh pastries, and light meals in a cozy, work-friendly atmosphere.</p>
+                    <div class="dining-meta">
+                        <span><i class="fas fa-clock"></i> 7:00 AM - 9:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== AMENITIES ==================== -->
+    <section class="amenities-section" id="amenities">
+        <div class="section-header">
+            <span class="section-label">Facilities</span>
+            <h2 class="section-title">World-Class Amenities</h2>
+            <p class="section-desc">
+                Every detail at Distance Hotel is designed to exceed your expectations 
+                and ensure a memorable stay in Kwara State.
+            </p>
+        </div>
+        
+        <div class="amenities-grid">
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-wifi"></i></div>
+                <h3 class="amenity-name">High-Speed WiFi</h3>
+                <p class="amenity-desc">Fiber optic throughout</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-swimming-pool"></i></div>
+                <h3 class="amenity-name">Infinity Pool</h3>
+                <p class="amenity-desc">Olympic-size with bar</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-dumbbell"></i></div>
+                <h3 class="amenity-name">Fitness Center</h3>
+                <p class="amenity-desc">24/7 modern equipment</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-spa"></i></div>
+                <h3 class="amenity-name">Spa & Wellness</h3>
+                <p class="amenity-desc">Massage & treatments</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-utensils"></i></div>
+                <h3 class="amenity-name">Fine Dining</h3>
+                <p class="amenity-desc">3 restaurants & 2 bars</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-briefcase"></i></div>
+                <h3 class="amenity-name">Business Center</h3>
+                <p class="amenity-desc">Meeting rooms & co-work</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-car"></i></div>
+                <h3 class="amenity-name">Valet Parking</h3>
+                <p class="amenity-desc">Secured underground</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3 class="amenity-name">24/7 Security</h3>
+                <p class="amenity-desc">CCTV & armed guards</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-plane"></i></div>
+                <h3 class="amenity-name">Airport Transfer</h3>
+                <p class="amenity-desc">Luxury fleet available</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-child"></i></div>
+                <h3 class="amenity-name">Kids Club</h3>
+                <p class="amenity-desc">Supervised activities</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-champagne-glasses"></i></div>
+                <h3 class="amenity-name">Event Spaces</h3>
+                <p class="amenity-desc">Weddings & conferences</p>
+            </div>
+            <div class="amenity-card">
+                <div class="amenity-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3 class="amenity-name">Concierge</h3>
+                <p class="amenity-desc">Personal assistant</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EVENTS ==================== -->
+    <section class="events-section" id="events">
+        <div class="section-header">
+            <span class="section-label">Celebrations</span>
+            <h2 class="section-title">Events & Conferences</h2>
+            <p class="section-desc">
+                From intimate weddings to corporate galas, our event spaces transform 
+                your vision into unforgettable moments.
+            </p>
+        </div>
+        
+        <div class="events-grid">
+            <div class="event-card large">
+                <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1000&h=600&fit=crop&q=80" 
+                     alt="Grand Ballroom" 
+                     loading="lazy">
+                <div class="event-overlay">
+                    <span class="event-capacity">Up to 500 Guests</span>
+                    <h3>Grand Ballroom</h3>
+                    <p>Crystal chandeliers, state-of-the-art AV, and customizable lighting for weddings, conferences, and galas.</p>
+                    <button class="btn-event" onclick="showToast('Event inquiry form coming soon')">
+                        <i class="fas fa-envelope"></i> Request Quote
+                    </button>
+                </div>
+            </div>
+            
+            <div class="event-card">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop&q=80" 
+                     alt="Boardroom" 
+                     loading="lazy">
+                <div class="event-overlay">
+                    <span class="event-capacity">20 Guests</span>
+                    <h3>Executive Boardroom</h3>
+                    <p>Private meetings with video conferencing and premium catering.</p>
+                </div>
+            </div>
+            
+            <div class="event-card">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=400&fit=crop&q=80" 
+                     alt="Garden Terrace" 
+                     loading="lazy">
+                <div class="event-overlay">
+                    <span class="event-capacity">150 Guests</span>
+                    <h3>Garden Terrace</h3>
+                    <p>Outdoor events with lush landscaping and romantic lighting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== GALLERY ==================== -->
+    <section class="gallery-section" id="gallery">
+        <div class="section-header">
+            <span class="section-label">Visual Tour</span>
+            <h2 class="section-title">Explore Our Hotel</h2>
+            <p class="section-desc">
+                Take a visual journey through the finest luxury hotel in Oro, Kwara State.
+            </p>
+        </div>
+        
+        <div class="gallery-masonry">
+            <div class="gallery-item tall">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=1000&fit=crop&q=80" 
+                     alt="Grand Lobby" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">Grand Lobby</span>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=400&fit=crop&q=80" 
+                     alt="The Azure Restaurant" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">The Azure</span>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=600&h=400&fit=crop&q=80" 
+                     alt="Infinity Pool" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">Infinity Pool</span>
+                </div>
+            </div>
+            <div class="gallery-item wide">
+                <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1000&h=500&fit=crop&q=80" 
+                     alt="Presidential Suite" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">Presidential Suite</span>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&h=400&fit=crop&q=80" 
+                     alt="Deluxe Room" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">Deluxe Room</span>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&h=400&fit=crop&q=80" 
+                     alt="Spa Treatment Room" 
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-label">Spa & Wellness</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== REVIEWS ==================== -->
+    <section class="reviews-section" id="reviews">
+        <div class="section-header">
+            <span class="section-label">Testimonials</span>
+            <h2 class="section-title">What Our Guests Say</h2>
+            <p class="section-desc">
+                Real reviews from real guests who experienced Distance Hotel.
+            </p>
+        </div>
+        
+        <div class="reviews-grid">
+            <div class="review-card featured">
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="review-text">
+                    "Absolutely the best hotel experience in Nigeria! The Presidential Suite was beyond imagination. 
+                    The staff anticipated every need before I even asked. This is what true luxury feels like."
+                </p>
+                <div class="review-author">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="Guest" class="review-avatar" loading="lazy">
+                    <div>
+                        <div class="review-name">Chief Adeola Johnson</div>
+                        <div class="review-date">Business Executive, Lagos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="review-text">
+                    "I travel to Kwara monthly for business. Distance Hotel is my only choice now. 
+                    Reliable WiFi, quiet rooms, and the Sky Lounge is perfect for evening meetings."
+                </p>
+                <div class="review-author">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Guest" class="review-avatar" loading="lazy">
+                    <div>
+                        <div class="review-name">Dr. Emmanuel Okafor</div>
+                        <div class="review-date">Medical Director, Abuja</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="review-text">
+                    "We celebrated our anniversary here and the Honeymoon Suite was breathtaking! 
+                    The private dinner setup by the pool was magical. Thank you for making it unforgettable."
+                </p>
+                <div class="review-author">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Guest" class="review-avatar" loading="lazy">
+                    <div>
+                        <div class="review-name">Fatima & Ibrahim Abdullahi</div>
+                        <div class="review-date">Anniversary Stay, Ilorin</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="review-text">
+                    "Hosted our company's annual retreat in the Grand Ballroom. The event team handled everything 
+                    flawlessly. Catering was exceptional and the AV setup was world-class."
+                </p>
+                <div class="review-author">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="Guest" class="review-avatar" loading="lazy">
+                    <div>
+                        <div class="review-name">Ngozi Eze</div>
+                        <div class="review-date">CEO, TechStart NG</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Stats -->
+        <div class="review-stats">
+            <div class="stats-summary">
+                <div class="stats-big-number">4.9</div>
+                <div class="stats-big-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stats-count">Based on 1,247 verified reviews</div>
+            </div>
+            <div class="stats-bars">
+                <div class="stat-bar-row">
+                    <span class="stat-bar-label">5 <i class="fas fa-star"></i></span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill" style="width:92%"></div></div>
+                    <span class="stat-bar-count">1,147</span>
+                </div>
+                <div class="stat-bar-row">
+                    <span class="stat-bar-label">4 <i class="fas fa-star"></i></span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill" style="width:5%"></div></div>
+                    <span class="stat-bar-count">62</span>
+                </div>
+                <div class="stat-bar-row">
+                    <span class="stat-bar-label">3 <i class="fas fa-star"></i></span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill" style="width:2%"></div></div>
+                    <span class="stat-bar-count">25</span>
+                </div>
+                <div class="stat-bar-row">
+                    <span class="stat-bar-label">2 <i class="fas fa-star"></i></span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill" style="width:0.5%"></div></div>
+                    <span class="stat-bar-count">8</span>
+                </div>
+                <div class="stat-bar-row">
+                    <span class="stat-bar-label">1 <i class="fas fa-star"></i></span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill" style="width:0.5%"></div></div>
+                    <span class="stat-bar-count">5</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==================== LOCATION ==================== -->
+    <section class="location-section" id="location">
+        <div class="location-grid">
+            <div class="location-info">
+                <span class="section-label">Find Us</span>
+                <h3 class="section-title">Visit Distance Hotel</h3>
+                <p>
+                    Conveniently located in the heart of Oro, Kwara State. 
+                    Easy access from Ilorin, Offa, and major road networks. 
+                    Just 45 minutes from Ilorin International Airport.
+                </p>
+                
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Address</h4>
+                            <p>1 Distance Boulevard, Oro, Kwara State, Nigeria</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Reservations</h4>
+                            <p>+234 800 000 0000</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>reservations@distancehotel.com.ng</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Hours</h4>
+                            <p>Check-in: 2:00 PM | Check-out: 12:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="location-map-wrap">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126093.274286!2d4.5!3d8.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDAnMDAuMCJOIDTCsDMwJzAwLjAiRQ!5e0!3m2!1sen!2sng!4v1" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <div class="map-overlay">
+                    <div class="map-overlay-info">
+                        <h4>Distance Hotel</h4>
+                        <p>Oro, Kwara State, Nigeria</p>
+                    </div>
+                    <a href="https://maps.google.com/?q=Oro+Kwara+State+Nigeria" 
+                       target="_blank" 
+                       class="btn-directions">
+                        Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA ==================== -->
+    <section class="cta-section" id="cta">
+        <div class="cta-bg">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&h=800&fit=crop&q=80" 
+                 alt="Distance Hotel Night View" 
+                 loading="lazy">
+        </div>
+        <div class="cta-overlay"></div>
+        
+        <div class="cta-content">
+            <h2>Ready to Experience True Luxury?</h2>
+            <p>
+                Book your stay today and discover why Distance Hotel is 
+                Kwara State's most trusted name in five-star hospitality.
+            </p>
+            <div class="cta-buttons">
+                <button class="btn-cta-primary" onclick="scrollToSection('rooms')">
+                    <i class="fas fa-calendar-check"></i> Book Your Stay
+                </button>
+                <a href="https://wa.me/2348000000000" 
+                   target="_blank" 
+                   class="btn-cta-secondary">
+                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                </a>
+            </div>
+            <div class="cta-guarantee">
+                <i class="fas fa-shield-halved"></i>
+                Free cancellation up to 24 hours before check-in
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand-col">
+                <div class="footer-brand">
+                    <div class="nav-logo">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <div>
+                        <h3>Distance Hotel</h3>
+                        <p>Oro, Kwara State</p>
+                    </div>
+                </div>
+                <p class="footer-about">
+                    Where distance meets luxury. Proudly Nigerian, globally renowned. 
+                    Experience hospitality that transcends expectations.
+                </p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="#rooms">Rooms & Suites</a></li>
+                    <li><a href="#dining">Restaurants & Bars</a></li>
+                    <li><a href="#amenities">Amenities</a></li>
+                    <li><a href="#events">Events & Weddings</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Cancellation Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-newsletter">
+                <h4>Stay Connected</h4>
+                <p>Get exclusive offers, event updates, and luxury travel tips.</p>
+                <form class="footer-form" onsubmit="event.preventDefault(); subscribeNewsletter();">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <div class="footer-payment">
+                    <span>We accept:</span>
+                    <div class="payment-icons">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-verve"></i>
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Distance Hotel. All rights reserved.</p>
+            <div class="footer-contact-info">
+                <span><i class="fas fa-phone"></i> +234 800 000 0000</span>
+                <span><i class="fab fa-whatsapp"></i> WhatsApp Available</span>
+                <span><i class="fas fa-envelope"></i> info@distancehotel.com.ng</span>
+            </div>
+        </div>
+    </footer>
+    <!-- ==================== BOOKING MODAL ==================== -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-backdrop" onclick="closeBookingModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3>Book Your Stay</h3>
+                    <p id="modalRoomName">Select a room</p>
+                </div>
+                <button class="modal-close" onclick="closeBookingModal()" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-body" onsubmit="event.preventDefault(); processBooking();">
+                <div class="booking-summary">
+                    <div class="booking-summary-row">
+                        <span class="booking-summary-label" id="summaryRoom">Room</span>
+                        <span class="booking-summary-price" id="summaryPrice">₦0/night</span>
+                    </div>
+                    <div class="booking-summary-dates" id="summaryDates">Select dates</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="bookFname">First Name</label>
+                        <input type="text" id="bookFname" class="form-input" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="bookLname">Last Name</label>
+                        <input type="text" id="bookLname" class="form-input" placeholder="Doe" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="bookEmail">Email</label>
+                    <input type="email" id="bookEmail" class="form-input" placeholder="john@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="bookPhone">Phone</label>
+                    <input type="tel" id="bookPhone" class="form-input" placeholder="+234 800 000 0000" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="modalCheckIn">Check In</label>
+                        <input type="date" id="modalCheckIn" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="modalCheckOut">Check Out</label>
+                        <input type="date" id="modalCheckOut" class="form-input" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="bookGuests">Guests</label>
+                    <select id="bookGuests" class="form-input">
+                        <option>1 Guest</option>
+                        <option selected>2 Guests</option>
+                        <option>3 Guests</option>
+                        <option>4 Guests</option>
+                        <option>5+ Guests</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="bookRequests">Special Requests</label>
+                    <textarea id="bookRequests" class="form-input" rows="3" placeholder="Any special requirements..."></textarea>
+                </div>
+                
+                <div class="form-total">
+                    <div class="total-row">
+                        <span class="label">Room Rate</span>
+                        <span class="value" id="rateTotal">₦0 × 0 nights</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="label">VAT (7.5%)</span>
+                        <span class="value" id="taxTotal">₦0</span>
+                    </div>
+                    <div class="total-row grand">
+                        <span>Total</span>
+                        <span class="value" id="grandTotal">₦0</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-lock"></i> Pay & Confirm
+                </button>
+                <button type="button" class="btn-whatsapp" onclick="bookViaWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== ROOM DETAILS MODAL ==================== -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-backdrop" onclick="closeDetailsModal()"></div>
+        <div class="modal-content modal-wide">
+            <div class="modal-hero">
+                <img id="detailImage" src="" alt="Room">
+                <button class="modal-hero-close" onclick="closeDetailsModal()" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="modal-hero-info">
+                    <h3 id="detailTitle">Room Name</h3>
+                    <div class="modal-hero-meta">
+                        <span id="detailGuests"><i class="fas fa-user-friends"></i> 2 Guests</span>
+                        <span id="detailSize"><i class="fas fa-ruler-combined"></i> 28m²</span>
+                        <span id="detailBed"><i class="fas fa-bed"></i> King Bed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-main">
+                        <h4>About This Room</h4>
+                        <p id="detailDesc">Description...</p>
+                        
+                        <h4>Room Features</h4>
+                        <div class="detail-features" id="detailFeatures">
+                            <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span><i class="fas fa-snowflake"></i> Air Conditioning</span>
+                            <span><i class="fas fa-tv"></i> Smart TV</span>
+                            <span><i class="fas fa-bath"></i> En-suite Bathroom</span>
+                            <span><i class="fas fa-mug-hot"></i> Tea & Coffee</span>
+                            <span><i class="fas fa-concierge-bell"></i> Room Service</span>
+                        </div>
+                        
+                        <h4>Amenities</h4>
+                        <div class="detail-amenities" id="detailAmenities"></div>
+                    </div>
+                    <div class="detail-sidebar">
+                        <div class="detail-price-box">
+                            <span class="detail-price-label">Per Night</span>
+                            <span class="detail-price-amount" id="detailPrice">₦0</span>
+                        </div>
+                        <div class="detail-benefits">
+                            <div><i class="fas fa-check"></i> Free cancellation</div>
+                            <div><i class="fas fa-check"></i> No prepayment needed</div>
+                            <div><i class="fas fa-check"></i> Breakfast included</div>
+                        </div>
+                        <button class="btn-submit" onclick="switchToBooking()">
+                            Book This Room
+                        </button>
+                        <button class="btn-whatsapp" onclick="bookViaWhatsAppFromDetails()">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST ==================== -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Notification</span>
+    </div>
+
+    <!-- ==================== BACK TO TOP ==================== -->
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- ===================================== -->
+    <!-- GLOBAL DATA -->
+    <!-- ===================================== -->
+    <script>
+        window.data = {{ data | tojson }};
+    </script>
+
+    <!-- ===================================== -->
+    <!-- MAIN SCRIPT -->
+    <!-- ===================================== -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- ===================================== -->
+    <!-- FALLBACK & INITIALIZATION -->
+    <!-- ===================================== -->
+    <script>
+        // Safe initialization that works even if script.js has issues
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Set default dates
+            const checkIn = document.getElementById('checkIn');
+            const checkOut = document.getElementById('checkOut');
+            const modalCheckIn = document.getElementById('modalCheckIn');
+            const modalCheckOut = document.getElementById('modalCheckOut');
+            
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const todayStr = today.toISOString().split('T')[0];
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            if (checkIn) checkIn.value = todayStr;
+            if (checkOut) checkOut.value = tomorrowStr;
+            if (modalCheckIn) modalCheckIn.value = todayStr;
+            if (modalCheckOut) modalCheckOut.value = tomorrowStr;
+            
+            // Set min dates
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                input.min = todayStr;
+            });
+            
+            // Animate stat numbers
+            const stats = document.querySelectorAll('.stat-number[data-target]');
+            const animateStat = (el) => {
+                const target = parseFloat(el.dataset.target);
+                if (!target) return;
+                
+                let current = 0;
+                const increment = target / 60;
+                const duration = 1500;
+                const startTime = performance.now();
+                const isDecimal = target % 1 !== 0;
+                
+                const update = (now) => {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const val = target * eased;
+                    
+                    el.textContent = isDecimal ? val.toFixed(1) : Math.round(val);
+                    
+                    if (progress < 1) requestAnimationFrame(update);
+                    else el.textContent = isDecimal ? target.toFixed(1) : target;
+                };
+                
+                requestAnimationFrame(update);
+            };
+            
+            // Intersection Observer for stats
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const num = entry.target.querySelector('.stat-number[data-target]');
+                            if (num && num.dataset.animated !== 'true') {
+                                num.dataset.animated = 'true';
+                                animateStat(num);
+                            }
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+                
+                document.querySelectorAll('.stat-item').forEach(item => observer.observe(item));
+            } else {
+                stats.forEach(animateStat);
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => {
+                    backToTop.classList.toggle('visible', window.scrollY > 600);
+                }, { passive: true });
+            }
+            
+            // Quick search function
+            window.quickSearch = function() {
+                const rooms = document.getElementById('rooms');
+                if (rooms) {
+                    rooms.scrollIntoView({ behavior: 'smooth' });
+                    if (typeof filterRooms === 'function') filterRooms('all');
+                }
+            };
+            
+            console.log('✅ Distance Hotel: Fallback initialization complete');
+        });
+    </script>
+
+</body>
+</html>
