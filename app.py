@@ -14,7 +14,7 @@ app = Flask(__name__)
 # ============================================
 # CONFIGURATION & SECURITY
 # ============================================
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret-2026')
+app.secret_key = os.environ.get('453e6852331b7018e76017922453975adfa26b65', 'distance-hotel-secret-2026')
 
 PAYSTACK_SECRET = os.environ.get(
     'PAYSTACK_SECRET_KEY',
