@@ -3,6 +3,12 @@
 # Version: 3.0.0
 # ============================================
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # This loads the .env file locally
+
+
 from flask import (
     Flask,
     render_template,
@@ -22,6 +28,7 @@ import re
 
 app = Flask(__name__)
 
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret
 # ============================================
 # PAYSTACK CONFIG
 # ============================================
