@@ -1,37 +1,20 @@
-# ============================================
-# DISTANCE HOTEL — FLASK BACKEND
-# Version: 3.0.0
-# ============================================
-
 import os
-from dotenv import load_dotenv
-
-load_dotenv()  # This loads the .env file locally
-
-
-from flask import (
-    Flask,
-    render_template,
-    request,
-    jsonify
-)
-
-from datetime import datetime
 import sqlite3
 import requests
-import os
 import re
+from datetime import datetime
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from dotenv import load_dotenv
 
-# ============================================
-# FLASK APP
-# ============================================
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret')
 # ============================================
-# PAYSTACK CONFIG
+# CONFIGURATION & SECURITY
 # ============================================
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret-2026')
 
 PAYSTACK_SECRET = os.environ.get(
     'PAYSTACK_SECRET_KEY',
@@ -43,25 +26,17 @@ PAYSTACK_PUBLIC = os.environ.get(
     'pk_test_a49bd26daf79787b5fde3f01f093a548c00e7665'
 )
 
-# ============================================
-# DATABASE CONFIG
-# ============================================
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, 'distance_hotel.db')
 
 # ============================================
-# DATABASE CONNECTION
+# DATABASE HELPERS
 # ============================================
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
-
-# ============================================
-# DATABASE INITIALIZATION
-# ============================================
 
 def init_db():
     conn = get_db_connection()
@@ -110,10 +85,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-# ============================================
-# INITIALIZE DATABASE
-# ============================================
-
+# Initialize Database on Startup
 init_db()
 
 # ============================================
@@ -137,7 +109,7 @@ HOTEL_DATA = {
             "guests": 2,
             "bed": "Queen Bed",
             "size": "28m²",
-            "description": "Comfortable and affordable accommodation perfect for budget-conscious travelers. Features a fan, free WiFi, and a cozy atmosphere.",
+            "description": "Comfortable and affordable accommodation perfect for budget-conscious travelers.",
             "tags": ["Fan", "WiFi", "Budget"]
         },
         {
@@ -149,7 +121,7 @@ HOTEL_DATA = {
             "guests": 2,
             "bed": "Queen Bed",
             "size": "32m²",
-            "description": "Upgraded comfort with air conditioning, premium bedding, and a work desk. Perfect for business and leisure travelers.",
+            "description": "Upgraded comfort with air conditioning, premium bedding, and a work desk.",
             "tags": ["AC", "Work Desk", "Premium"]
         },
         {
@@ -161,7 +133,7 @@ HOTEL_DATA = {
             "guests": 2,
             "bed": "King Bed",
             "size": "35m²",
-            "description": "Spacious room with air conditioning, smart TV, and premium furnishings. Ideal for business travelers seeking comfort and productivity.",
+            "description": "Spacious room with air conditioning, smart TV, and premium furnishings.",
             "tags": ["AC", "Smart TV", "Luxury"]
         },
         {
@@ -173,7 +145,7 @@ HOTEL_DATA = {
             "guests": 4,
             "bed": "King Bed",
             "size": "65m²",
-            "description": "Ultimate luxury with separate living area, premium amenities, and stunning views. The perfect choice for special occasions.",
+            "description": "Ultimate luxury with separate living area and premium amenities.",
             "tags": ["VIP", "King Bed", "Security"]
         },
         {
@@ -185,7 +157,7 @@ HOTEL_DATA = {
             "guests": 6,
             "bed": "King Bed",
             "size": "280m²",
-            "description": "The pinnacle of luxury. Private terrace, jacuzzi, dedicated butler service, and panoramic views of Oro.",
+            "description": "The pinnacle of luxury. Private terrace, jacuzzi, and dedicated butler service.",
             "tags": ["VIP", "Jacuzzi", "Butler"]
         },
         {
@@ -197,18 +169,18 @@ HOTEL_DATA = {
             "guests": 2,
             "bed": "King Bed",
             "size": "120m²",
-            "description": "Romantic retreat with ocean views, champagne service, and rose petal arrangements. Perfect for newlyweds.",
+            "description": "Romantic retreat with ocean views and champagne service.",
             "tags": ["Romantic", "Ocean View", "Champagne"]
         }
     ]
 }
+
 # ============================================
-# HELPERS
+# LOGIC HELPERS
 # ============================================
 
 def parse_price(value):
-    if isinstance(value, int):
-        return value
+    if isinstance(value, int): return value
     cleaned = re.sub(r'[^\d]', '', str(value))
     return int(cleaned) if cleaned else 0
 
@@ -216,318 +188,60 @@ def calculate_nights(check_in, check_out):
     try:
         start = datetime.strptime(check_in, '%Y-%m-%d')
         end = datetime.strptime(check_out, '%Y-%m-%d')
-        nights = (end - start).days
-        return max(nights, 0)
-    except Exception:
-        return 0
+        return max((end - start).days, 0)
+    except: return 0
 
 def calculate_total(room_price, nights):
     subtotal = room_price * nights
     vat = int(subtotal * 0.075)
     return subtotal + vat
 
-def verify_paystack_payment(reference):
-    headers = {'Authorization': f'Bearer {PAYSTACK_SECRET}'}
-    response = requests.get(
-        f'https://api.paystack.co/transaction/verify/{reference}',
-        headers=headers,
-        timeout=30
-    )
-    return response.json()
-
 # ============================================
-# HOME ROUTE
+# ROUTES
 # ============================================
 
 @app.route('/')
 def home():
-    return render_template(
-        'index.html',
-        data=HOTEL_DATA,
-        paystack_key=PAYSTACK_PUBLIC
-    )
-
-# ============================================
-# INITIALIZE PAYMENT
-# ============================================
+    return render_template('index.html', data=HOTEL_DATA, paystack_key=PAYSTACK_PUBLIC)
 
 @app.route('/api/initialize-payment', methods=['POST'])
 def initialize_payment():
     try:
         data = request.get_json()
-        if not data:
-            return jsonify({'success': False, 'error': 'No data received'}), 400
-
         email = data.get('email', 'guest@distancehotel.com.ng')
         amount = parse_price(data.get('amount', 0)) * 100
-
-        if amount <= 0:
-            return jsonify({'success': False, 'error': 'Invalid amount'}), 400
-
-        headers = {
-            'Authorization': f'Bearer {PAYSTACK_SECRET}',
-            'Content-Type': 'application/json'
-        }
-
+        
+        headers = {'Authorization': f'Bearer {PAYSTACK_SECRET}', 'Content-Type': 'application/json'}
         payload = {
-            'email': email,
-            'amount': amount,
+            'email': email, 'amount': amount,
             'callback_url': request.host_url + 'verify-payment',
-            'metadata': {
-                'room_name': data.get('room_name', ''),
-                'guest_name': data.get('guest_name', ''),
-                'phone': data.get('phone', ''),
-                'check_in': data.get('check_in', ''),
-                'check_out': data.get('check_out', '')
-            }
+            'metadata': data
         }
-
-        response = requests.post(
-            'https://api.paystack.co/transaction/initialize',
-            json=payload,
-            headers=headers,
-            timeout=30
-        )
-
-        result = response.json()
-
-        if result.get('status'):
-            return jsonify({
-                'success': True,
-                'authorization_url': result['data']['authorization_url'],
-                'reference': result['data']['reference']
-            })
-
-        return jsonify({
-            'success': False,
-            'error': result.get('message', 'Payment failed')
-        })
-
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-# ============================================
-# VERIFY PAYMENT (PAYSTACK CALLBACK)
-# ============================================
+        r = requests.post('https://api.paystack.co/transaction/initialize', json=payload, headers=headers)
+        res = r.json()
+        return jsonify({'success': True, 'authorization_url': res['data']['authorization_url']}) if res.get('status') else jsonify({'success': False})
+    except Exception as e: return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/verify-payment')
 def verify_payment():
     reference = request.args.get('reference')
-    if not reference:
-        return "Missing payment reference", 400
-
-    try:
-        result = verify_paystack_payment(reference)
-
-        if result.get('status') and result['data']['status'] == 'success':
-            metadata = result['data'].get('metadata', {})
-            email = result['data']['customer']['email']
-            amount = result['data']['amount'] // 100
-
-            nights = calculate_nights(
-                metadata.get('check_in', ''),
-                metadata.get('check_out', '')
-            )
-
-            conn = get_db_connection()
-            cursor = conn.cursor()
-
-            cursor.execute('''
-                INSERT INTO bookings (
-                    room_name, guest_name, email, phone,
-                    check_in, check_out, total_amount,
-                    payment_status, paystack_ref
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                metadata.get('room_name', ''),
-                metadata.get('guest_name', ''),
-                email,
-                metadata.get('phone', ''),
-                metadata.get('check_in', ''),
-                metadata.get('check_out', ''),
-                amount,
-                'paid',
-                reference
-            ))
-
-            conn.commit()
-            conn.close()
-
-            return render_template(
-                'payment_success.html',
-                reference=reference,
-                amount=amount
-            )
-
-        return render_template('payment_failed.html', reference=reference)
-
-    except Exception as e:
-        return f"Error: {str(e)}", 500
-# ============================================
-# BOOKING API (NO PAYMENT)
-# ============================================
-
-@app.route('/api/book', methods=['POST'])
-def api_book():
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({'success': False, 'error': 'No data provided'}), 400
-
-        required = ['room_name', 'guest_name', 'phone', 'check_in', 'check_out']
-        for field in required:
-            if not data.get(field):
-                return jsonify({'success': False, 'error': f'Missing {field}'}), 400
-
-        nights = calculate_nights(data['check_in'], data['check_out'])
-        if nights <= 0:
-            return jsonify({'success': False, 'error': 'Invalid dates'}), 400
-
-        # Find room price
-        room_price = 0
-        for room in HOTEL_DATA['rooms']:
-            if room['name'] == data['room_name']:
-                room_price = room['price']
-                break
-
-        total = calculate_total(room_price, nights)
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        cursor.execute('''
-            INSERT INTO bookings (
-                room_name, guest_name, email, phone,
-                check_in, check_out, guests, requests,
-                total_amount, payment_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            data['room_name'],
-            data['guest_name'],
-            data.get('email', ''),
-            data['phone'],
-            data['check_in'],
-            data['check_out'],
-            data.get('guests', 1),
-            data.get('requests', ''),
-            total,
-            data.get('payment_status', 'pending')
-        ))
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Booking saved',
-            'total': total,
-            'nights': nights
-        })
-
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-# ============================================
-# NEWSLETTER API
-# ============================================
-
-@app.route('/api/subscribe', methods=['POST'])
-def api_subscribe():
-    try:
-        data = request.get_json()
-        email = data.get('email', '').strip().lower()
-
-        if not email or '@' not in email:
-            return jsonify({'success': False, 'error': 'Invalid email'}), 400
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        cursor.execute('''
-            INSERT OR IGNORE INTO subscribers (email)
-            VALUES (?)
-        ''', (email,))
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Subscribed successfully'
-        })
-
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-# ============================================
-# CONTACT API
-# ============================================
-
-@app.route('/api/contact', methods=['POST'])
-def api_contact():
-    try:
-        data = request.get_json()
-        name = data.get('name', '').strip()
-        email = data.get('email', '').strip()
-        message = data.get('message', '').strip()
-
-        if not name or not email or not message:
-            return jsonify({'success': False, 'error': 'All fields required'}), 400
-
-        if not validate_email_simple(email):
-            return jsonify({'success': False, 'error': 'Invalid email'}), 400
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        cursor.execute('''
-            INSERT INTO contacts (name, email, subject, message)
-            VALUES (?, ?, ?, ?)
-        ''', (name, email, data.get('subject', 'General Inquiry'), message))
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Message sent successfully'
-        })
-
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-def validate_email_simple(email):
-    return '@' in email and '.' in email.split('@')[-1]
-
-# ============================================
-# ADMIN DASHBOARD
-# ============================================
-
-# ============================================
-# ADMIN DASHBOARD (SECURED)
-# ============================================
-
-@app.route('/admin')
-def admin():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    headers = {'Authorization': f'Bearer {PAYSTACK_SECRET}'}
+    r = requests.get(f'https://api.paystack.co/transaction/verify/{reference}', headers=headers)
+    result = r.json()
     
-    cursor.execute("SELECT * FROM bookings ORDER BY id DESC")
-    bookings = cursor.fetchall()
-    
-    cursor.execute("SELECT * FROM subscribers ORDER BY id DESC")
-    subscribers = cursor.fetchall()
+    if result.get('status') and result['data']['status'] == 'success':
+        meta = result['data'].get('metadata', {})
+        conn = get_db_connection()
+        conn.execute('INSERT INTO bookings (room_name, guest_name, email, phone, check_in, check_out, total_amount, payment_status, paystack_ref) VALUES (?,?,?,?,?,?,?,?,?)',
+                     (meta.get('room_name'), meta.get('guest_name'), result['data']['customer']['email'], meta.get('phone'), meta.get('check_in'), meta.get('check_out'), result['data']['amount']//100, 'paid', reference))
+        conn.commit()
+        conn.close()
+        return render_template('payment_success.html', reference=reference)
+    return render_template('payment_failed.html')
 
-    total_revenue = sum(b['total_amount'] or 0 for b in bookings if b['payment_status'] == 'paid')
-    total_bookings = len(bookings)
-    paid_bookings = sum(1 for b in bookings if b['payment_status'] == 'paid')
-    pending_bookings = sum(1 for b in bookings if b['payment_status'] == 'pending')
-
-    conn.close()
-    return render_template('admin.html', bookings=bookings, subscribers=subscribers, total_revenue=total_revenue, total_bookings=total_bookings, paid_bookings=paid_bookings, pending_bookings=pending_bookings)
+# ============================================
+# ADMIN & LOGIN (FIXED HEAD TO TOE)
+# ============================================
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -539,6 +253,29 @@ def login():
             return redirect(url_for('admin'))
         return "Invalid login details", 401
     return render_template('login.html')
+
+@app.route('/admin')
+def admin():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    conn = get_db_connection()
+    bookings = conn.execute("SELECT * FROM bookings ORDER BY id DESC").fetchall()
+    subscribers = conn.execute("SELECT * FROM subscribers ORDER BY id DESC").fetchall()
+    
+    total_revenue = sum(b['total_amount'] or 0 for b in bookings if b['payment_status'] == 'paid')
+    total_bookings = len(bookings)
+    paid_bookings = sum(1 for b in bookings if b['payment_status'] == 'paid')
+    pending_bookings = sum(1 for b in bookings if b['payment_status'] == 'pending')
+    
+    conn.close()
+    return render_template('admin.html', 
+                           bookings=bookings, 
+                           subscribers=subscribers, 
+                           total_revenue=total_revenue, 
+                           total_bookings=total_bookings,
+                           paid_bookings=paid_bookings,
+                           pending_bookings=pending_bookings)
 
 @app.route('/logout')
 def logout():
