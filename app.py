@@ -28,7 +28,7 @@ import re
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'distance-hotel-secret')
 # ============================================
 # PAYSTACK CONFIG
 # ============================================
