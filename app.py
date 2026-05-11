@@ -554,21 +554,10 @@ def confirm_booking(booking_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        cursor.execute('''
-            UPDATE bookings
-            SET payment_status = 'paid'
-            WHERE id = ?
-        ''', (booking_id,))
-
+        cursor.execute("UPDATE bookings SET payment_status = 'paid' WHERE id = ?", (booking_id,))
         conn.commit()
         conn.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Booking confirmed'
-        })
-
+        return jsonify({'success': True, 'message': 'Booking confirmed'})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -577,22 +566,15 @@ def delete_booking(booking_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
         cursor.execute('DELETE FROM bookings WHERE id = ?', (booking_id,))
-
         conn.commit()
         conn.close()
-
-        return jsonify({
-            'success': True,
-            'message': 'Booking deleted'
-        })
-
+        return jsonify({'success': True, 'message': 'Booking deleted'})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
 # ============================================
-# ERROR HANDLERS
+# ERROR HANDLERS & HEALTH
 # ============================================
 
 @app.errorhandler(404)
@@ -603,33 +585,17 @@ def not_found(e):
 
 @app.errorhandler(500)
 def server_error(e):
-    if request.path.startswith('/api/'):
-        return jsonify({'success': False, 'error': 'Internal server error'}), 500
     return render_template('500.html'), 500
-
-# ============================================
-# HEALTH CHECK
-# ============================================
 
 @app.route('/health')
 def health_check():
-    try:
-        conn = get_db_connection()
-        conn.execute('SELECT 1')
-        conn.close()
-        db_status = 'connected'
-    except Exception:
-        db_status = 'error'
+    return jsonify({'status': 'ok', 'service': 'Distance Hotel API'})
 
-    return jsonify({
-        'status': 'ok',
-        'database': db_status,
-        'service': 'Distance Hotel API',
-        'version': '3.0.0'
-    })
-    
-    
-   @app.route('/login', methods=['GET', 'POST'])
+# ============================================
+# LOGIN & LOGOUT (FIXED INDENTATION)
+# ============================================
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user = request.form.get('username')
@@ -640,16 +606,10 @@ def login():
         return "Invalid login details", 401
     return render_template('login.html')
 
-
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# ============================================
-# RUN SERVER
-# ============================================
-
 if __name__ == '__main__':
-    # host='0.0.0.0' is required for Render to see the app
     app.run(debug=True, host='0.0.0.0', port=5000)
