@@ -628,7 +628,7 @@ def login():
         user = request.form.get('username')
         pwd = request.form.get('password')
         
-        # Security: Replace with your chosen username and password
+        # Security: Matches your chosen credentials
         if user == 'admin' and pwd == 'Distance2026':
             session['logged_in'] = True
             return redirect(url_for('admin'))
@@ -642,10 +642,10 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-
 # ============================================
 # RUN SERVER
 # ============================================
 
 if __name__ == '__main__':
+    # host='0.0.0.0' is required for Render to see the app
     app.run(debug=True, host='0.0.0.0', port=5000)
